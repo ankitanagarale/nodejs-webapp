@@ -5,7 +5,7 @@ metadata:
   labels:
     app: nodesy-app
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: nodesy-app
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nodesy-container
-        image: 069279771141.dkr.ecr.us-east-2.amazonaws.com/nodejs-webapp:v1.0.0.RELEASE
+        image: 581355710136.dkr.ecr.us-east-2.amazonaws.com/eks-repo:v1.0.0.RELEASE
         ports:
         - containerPort: 3000
         
