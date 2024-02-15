@@ -28,14 +28,18 @@ phases:
       
   post_build:
     commands:
-      - echo Build completed on `date`
+     - echo Build completed on `date`
       - echo Pushing the Docker image...
       - docker push $IMAGE_REPO_NAME:$IMAGE_TAG
       - aws eks update-kubeconfig --name my-cluster-micro --region us-east-2
-      # - echo Push the latest image to cluster
-      #  # Get AWS Credential using STS Assume Role for kubectl
-      # - echo "Setting Environment Variables related to AWS CLI for Kube Config Setup"          
-      # - export AWS_ACCESS_KEY_ID="$(aws configure get aws_access_key_id)"
-      # - export AWS_SECRET_ACCESS_KEY="$(aws configure get aws_secret_access_key)"
-      # - export AWS_DEFAULT_REGION="$(aws configure get region)"
-      - kubectl apply -f deployment.yaml
+      - echo Push the latest image to cluster
+      - echo "Setting Environment Variables related to AWS CLI for Kube Config Setup"          
+      - CREDENTIALS=$(aws sts assume-role --role-arn $EKS_KUBECTL_ROLE_ARN --role-session-name codebuild-kubectl --duration-seconds 900)    
+      - export AWS_ACCESS_KEY_ID="$(echo ${CREDENTIALS} | jq -r '.Credentials.AccessKeyId')"
+      - export AWS_SECRET_ACCESS_KEY="$(echo ${CREDENTIALS} | jq -r '.Credentials.SecretAccessKey')"
+      - export AWS_SESSION_TOKEN="$(echo ${CREDENTIALS} | jq -r '.Credentials.SessionToken')"
+      - export AWS_EXPIRATION=$(echo ${CREDENTIALS} | jq -r '.Credentials.Expiration')
+       # Setup kubectl with our EKS Cluster              
+      - echo "Update Kube Config"      
+      - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME
+      - kubectl apply -f deployment.yml
