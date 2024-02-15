@@ -18,17 +18,16 @@ phases:
       - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 581355710136.dkr.ecr.us-east-2.amazonaws.com
       - IMAGE_REPO_NAME=581355710136.dkr.ecr.us-east-2.amazonaws.com/eks-repo
       - IMAGE_TAG=v1.0.0.RELEASE
+
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...          
       - docker build --tag $IMAGE_REPO_NAME:$IMAGE_TAG .
  
-
-      
   post_build:
     commands:
-     - echo Build completed on `date`
+      - echo Build completed on `date`
       - echo Pushing the Docker image...
       - docker push $IMAGE_REPO_NAME:$IMAGE_TAG
       - aws eks update-kubeconfig --name my-cluster-micro --region us-east-2
@@ -39,7 +38,6 @@ phases:
       - export AWS_SECRET_ACCESS_KEY="$(echo ${CREDENTIALS} | jq -r '.Credentials.SecretAccessKey')"
       - export AWS_SESSION_TOKEN="$(echo ${CREDENTIALS} | jq -r '.Credentials.SessionToken')"
       - export AWS_EXPIRATION=$(echo ${CREDENTIALS} | jq -r '.Credentials.Expiration')
-       # Setup kubectl with our EKS Cluster              
       - echo "Update Kube Config"      
       - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME
       - kubectl apply -f deployment.yml
