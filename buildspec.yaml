@@ -57,6 +57,8 @@ phases:
       - kubectl get all 
       - kubectl get pods
       - kubectl get svc
+      - sleep 60 
+      - kubectl get all 
        # helm
       # commenetd task of helm do manuallly 
       # - eksctl utils associate-iam-oidc-provider --cluster eks --approve
@@ -65,3 +67,7 @@ phases:
       # - eksctl create addon --name aws-ebs-csi-driver --cluster "eks" --service-account-role-arn "arn:aws:iam::581355710136:role/AmazonEKS_EBS_CSI_DriverRole" --force
       - helm upgrade -i kubecost oci://public.ecr.aws/kubecost/cost-analyzer --version="1.104.4" --namespace kubecost --create-namespace -f  values-eks-cost-monitoring.yaml --set prometheus.configmapReload.prometheus.enabled="false"
       - kubectl get pods -n kubecost
+      - sleep 60
+      - kubectl get all -n kubecost
+      - kubectl get svc -n kubecost 
+      
