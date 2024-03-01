@@ -28,8 +28,8 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 581355710136.dkr.ecr.us-east-2.amazonaws.com
-      - IMAGE_REPO_NAME=581355710136.dkr.ecr.us-east-2.amazonaws.com/canary-ecr
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 749036019521.dkr.ecr.ap-south-1.amazonaws.com
+      - IMAGE_REPO_NAME=749036019521.dkr.ecr.ap-south-1.amazonaws.com/node-repo
       - IMAGE_TAG=v1.0.0.RELEASE
       
 
